@@ -5,6 +5,7 @@ pipeline {
         SERVICE = 'backend'
         ENVIRONMENT = 'QA'
         appVersion = ''
+        ACCOUNT_NUMBER = '412306530000'
     }
     options {
         disableConcurrentBuilds()
@@ -32,9 +33,13 @@ pipeline {
         stage('docker') {
             steps {
                 script {
+                    withAWS(region: 'us-east-1', credentials: 'aws-creds') {
                     sh """
-                        docker build -t backend:1.0 .
+                        aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${ACCOUNT_NUMBER}.dkr.ecr.us-east-1.amazonaws.com
+                        docker build -t ${ACCOUNT_NUMBER}.dkr.ecr.us-east-1.amazonaws.com/expense/backend:appVersion .
+                        docker push ${ACCOUNT_NUMBER}.dkr.ecr.us-east-1.amazonaws.com/expense/backend:appVersion
                     """
+                    }
                 }
             }
         }
