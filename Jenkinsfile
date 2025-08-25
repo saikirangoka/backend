@@ -29,6 +29,15 @@ pipeline {
                 }
             }
         }
+        stage('docker') {
+            steps {
+                script {
+                    sh """
+                        docker build -t backend:1.0 .
+                    """
+                }
+            }
+        }
     }
     post {
         always {
