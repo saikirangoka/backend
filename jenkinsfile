@@ -23,7 +23,7 @@ pipeline {
     }
     post {
         always {
-            echo 'always shows'
+            echo 'always shows '
             deleteDir()
         }
         failure {
